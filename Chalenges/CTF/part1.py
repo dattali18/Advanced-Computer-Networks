@@ -26,12 +26,15 @@ if not syn_ack_packet:
 
 # prepare the ack packet
 
+seq_num = syn_ack_packet[0][TCP].ack
+ack_num = syn_ack_packet[0][TCP].seq + 1
+
 ack_segment = TCP(
     dport=SERVER_PORT,
     sport=CLIENT_PORT,
     flags="A",
-    seq=syn_ack_packet[0][TCP].ack,
-    ack=syn_ack_packet[0][TCP].seq + 1,
+    seq=seq_num,
+    ack=ack_num,
 )
 
 ack_packet = IP(dst="127.0.0.1") / ack_segment
@@ -42,10 +45,17 @@ send(ack_packet)
 # the data is a simple http get
 
 # sleep for 1 second before sending the data
+import time
+
+time.sleep(3)
 
 
-data_segment = TCP(dport=SERVER_PORT, sport=CLIENT_PORT, flags="PA", seq=123, ack=1) / Raw("GET / HTTP/1.1\r\n\r\n")
+data_segment = TCP(dport=SERVER_PORT, sport=CLIENT_PORT, flags="PA", seq=seq_num, ack=ack_num) / Raw(load="GET / HTTP/1.1\r\n\r\n")
 
-data_packet = IP(dst="127.0.0.01") / data_segment
+data_packet = IP(dst="127.0.0.1") / data_segment
 
 send(data_packet)
+
+r = sniff(count=1, lfilter=filter_packet)
+
+print(r[0][Raw].load.decode())

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            text-align: center;
+        }
+        .image {
+            margin-bottom: 20px;
+        }
+        .data {
+            font-size: 1.2em;
+        }
+        .data span {
+            font-weight: bold;
+        }
+		.link {
+			font-size: 1.2em;
+		}
+		.link span {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="data">
+			<p>You have proven yourself worthy... so far :)</p>
+			<p><p>
+			<p>/PrivateKey.jpg is on the CTF's server</p>
+			<p><p>
+            <p>Exponent: <span>0x10001</span></p>
+            <p>Modulus: <span>0x221d49b02a45b172de232b09b</span></p>
+			<p></p>
+			<p></p>
+		</div>
+		<div class="link">
+             <p>Tip: <a href="https://www.youtube.com/watch?v=-ShwJqAalOk" target="_blank">Breaking RSA</a></p>
+        </div>
+		<div class="data">
+			<p>Extra Tips:</p>
+			<p>Replace the string "PrivateKey" with the private key...<p>
+			<p>The private key should be written in HexDecimal, small letters, start with 0x<p>
+			<p>"import egcd" will be very usefull once P,Q are found</p>
+        </div>
+    </div>
+</body>
+</html>
