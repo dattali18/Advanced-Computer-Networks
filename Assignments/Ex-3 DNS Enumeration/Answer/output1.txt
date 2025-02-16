@@ -1,0 +1,105 @@
+python dnsmap.py jct.ac.il   
+DNS Mapping for domain: jct.ac.il
+
+Mapping Results:
+
+Subdomain: api.jct.ac.il
+  IPs/References:
+    - waf-2.jct.ac.il.
+    - 147.161.1.55
+
+Subdomain: backup.jct.ac.il
+  IPs/References:
+    - cmvlt-media.jct.ac.il.
+    - 10.1.101.1
+
+Subdomain: cc.jct.ac.il
+  IPs/References:
+    - website20.jct.ac.il.
+    - website20-public.jct.ac.il.
+    - 147.161.1.49
+
+Subdomain: dns.jct.ac.il
+  IPs/References:
+    - 147.161.1.4
+    - 147.161.1.15
+
+Subdomain: download.jct.ac.il
+  IPs/References:
+    - website20.jct.ac.il.
+    - website20-public.jct.ac.il.
+    - 147.161.1.49
+
+Subdomain: g.jct.ac.il
+  IPs/References:
+    - 147.161.1.49
+
+Subdomain: hd.jct.ac.il
+  IPs/References:
+    - 147.161.1.50
+
+Subdomain: ip.jct.ac.il
+  IPs/References:
+    - website20.jct.ac.il.
+    - website20-public.jct.ac.il.
+    - 147.161.1.49
+
+Subdomain: library.jct.ac.il
+  IPs/References:
+    - 20.172.188.135
+
+Subdomain: mail.jct.ac.il
+  IPs/References:
+    - 147.161.1.29
+    - 147.161.1.36
+    - 147.161.1.38
+
+Subdomain: moodle.jct.ac.il
+  IPs/References:
+    - 129.159.130.77
+
+Subdomain: nd.jct.ac.il
+  IPs/References:
+    - website-ad.jct.ac.il.
+    - website-ad-public.jct.ac.il.
+    - 147.161.1.46
+
+Subdomain: owa.jct.ac.il
+  IPs/References:
+    - website20.jct.ac.il.
+    - website20-public.jct.ac.il.
+    - 147.161.1.49
+
+Subdomain: registration.jct.ac.il
+  IPs/References:
+    - waf-1.jct.ac.il.
+    - 147.161.1.54
+
+Subdomain: s.jct.ac.il
+  IPs/References:
+    - website20.jct.ac.il.
+    - website20-public.jct.ac.il.
+    - 147.161.1.49
+
+Subdomain: secure.jct.ac.il
+  IPs/References:
+    - website20.jct.ac.il.
+    - website20-public.jct.ac.il.
+    - 147.161.1.49
+
+Subdomain: support.jct.ac.il
+  IPs/References:
+    - its-public.jct.ac.il.
+    - 147.161.1.39
+
+Subdomain: vpn.jct.ac.il
+  IPs/References:
+    - 147.161.1.113
+
+Subdomain: web.jct.ac.il
+  IPs/References:
+    - 147.161.1.37
+
+Subdomain: www.jct.ac.il
+  IPs/References:
+    - 185.186.66.220
