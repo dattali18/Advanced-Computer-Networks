@@ -1,0 +1,19 @@
+python dns_part2.py jct.ac.il
+DNS Mapping for domain: jct.ac.il
+
+Mapping Results:
+
+Subdomain: ftp.jct.ac.il
+  IPs/References:
+    - jct.ac.il.
+    - 185.186.66.220
+Subdomain: mail.jct.ac.il
+  IPs/References:
+    - 185.186.66.220
+Subdomain: webmail.jct.ac.il
+  IPs/References:
+    - 185.186.66.220
+Subdomain: www.jct.ac.il
+  IPs/References:
+    - jct.ac.il.
+    - 185.186.66.220
