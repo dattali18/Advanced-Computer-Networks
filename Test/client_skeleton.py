@@ -1,3 +1,7 @@
+"""
+Daniel Attali 328780879
+"""
+
 from scapy.all import *
 import time
 
@@ -9,6 +13,7 @@ conf.iface = dev_from_index(-4)
 """ Use prints after every step to show that it is completed"""
 
 dport = 4444
+
 
 # step 1 - send SYN
 def send_syn_client():

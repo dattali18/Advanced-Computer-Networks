@@ -1,3 +1,7 @@
+"""
+Daniel Attali 328780879
+"""
+
 from scapy.all import *
 import time
 
@@ -102,11 +106,27 @@ tfo_syn = capture_tfo_syn()
 
 def send_tfo_response(syn_packet, request_type):
     if Raw in syn_packet and syn_packet[Raw].load.startswith(COOKIE):
+        # if request_type == "Name":
+        #     response = b"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nName: Daniel Attali"
+        # elif request_type == "ID":
+        #     response = (
+        #         b"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nID: 328780879"
+        #     )
         if request_type == "Name":
-            response = b"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nName: Daniel Attali"
+            response = (
+                b"HTTP/1.1 200 OK\r\n"
+                b"Content-Type: text/plain\r\n"
+                b"Content-Length: 23\r\n"
+                b"Connection: close\r\n"
+                b"Name: Daniel Attali"
+            )
         elif request_type == "ID":
             response = (
-                b"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nID: 328780879"
+                b"HTTP/1.1 200 OK\r\n"
+                b"Content-Type: text/plain\r\n"
+                b"Content-Length: 18\r\n"
+                b"Connection: close\r\n"
+                b"ID: 328780879"
             )
 
         ip_layer = IP(dst=syn_packet[IP].src)
