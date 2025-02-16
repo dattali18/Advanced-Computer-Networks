@@ -13,6 +13,7 @@ conf.iface = dev_from_index(-4)
 """ Use prints after every step to show that it is completed"""
 
 dport = 4444
+sport = PORT
 
 
 # step 1 - send SYN
@@ -20,7 +21,7 @@ def send_syn_client():
     print("Sending SYN")
 
     ip_layer = IP(dst="127.0.0.1")
-    tcp_layer = TCP(sport=PORT, dport=dport, flags="S", seq=100)
+    tcp_layer = TCP(sport=sport, dport=dport, flags="S", seq=100)
 
     packet = ip_layer / tcp_layer
     send(packet)
@@ -34,6 +35,9 @@ sport = send_syn_client()
 
 # step 2 - use proper filter to capture server's SYN ACK, keep the cookie
 def syn_ack_filter(p):
+    """
+    Filter for a server SYN ACK packet
+    """
     return TCP in p and p[TCP].dport == sport and p[TCP].flags == "SA"
 
 
@@ -95,13 +99,16 @@ def send_tfo_request_server(cookie, request_type, sport):
 
     ip_layer = IP(dst="127.0.0.1")
     tcp_layer = TCP(sport=sport, dport=dport, flags="S", seq=200)
+    # starting with a new seq number
 
     packet = ip_layer / tcp_layer / Raw(load=cookie + http_request.encode())
+    # adding teh cookie and the http request 
+    # cookie has the first 4 bytes of the packet (meaning we know the server knows how to read it)
 
     send(packet)
     print("Sending TFO request")
 
-
+# choose another port to so there isn't conflict (in Wireshark)
 sport = sport + 1
 
 send_tfo_request_server(cookie, request_type, sport)
@@ -112,7 +119,7 @@ send_tfo_request_server(cookie, request_type, sport)
 # B. Extract the data from the HTTP header and print it.
 def filter_server_response(p):
     """
-    it is tcp + syn ack
+    Filter for a server response packet with the data
     """
     return TCP in p and p[TCP].dport == sport and p[TCP].flags == "SA" and Raw in p
 
@@ -129,4 +136,12 @@ def capture_server_response():
 
 response = capture_server_response()
 
-print(f"Server response: {response[Raw].load.decode('utf-8')}")
+# print(f"Server response: {response[Raw].load.decode('utf-8')}")
+
+# response = b"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nName: Daniel Attali"
+
+raw = response[Raw].load.decode('utf-8')
+
+data = raw.split("\r\n\r\n")[1]
+
+print(f"Server response: {data}")

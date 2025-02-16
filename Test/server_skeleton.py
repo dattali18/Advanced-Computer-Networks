@@ -6,9 +6,16 @@ from scapy.all import *
 import time
 
 PORT = 4444
+# cookie is a 64 bit number
+# this was chosen randomly
+# to make the connection more secure for each client we can use a different cookie generated randomly
+# but for the purpose of this exercise we will use a static cookie
 COOKIE = b"87654321"
 
+dport = PORT
+
 show_interfaces()
+# -4 is my localhost interface
 conf.iface = dev_from_index(-4)
 
 """ Use prints after every step to show that it is completed"""
@@ -16,7 +23,10 @@ conf.iface = dev_from_index(-4)
 
 # step 1 - use proper filter to capture the client SYN
 def syn_filter(p):
-    return TCP in p and p[TCP].dport == PORT and p[TCP].flags == "S"
+    """
+    Filter for a client SYN packet
+    """
+    return TCP in p and p[TCP].dport == dport and p[TCP].flags == "S"
 
 
 def capture_syn_client():
@@ -34,15 +44,15 @@ syn = capture_syn_client()
 
 # step 2 - send SYN ACK along with a cookie (64 bit of your choice)
 def send_syncak_with_cookie_client(synpacket):
-    print("Sending SYN ACK with cookie")
+    print("Sending SYN ACK wiith cookie")
 
     ip_layer = IP(dst=synpacket[IP].src)
     tcp_layer = TCP(
-        sport=PORT,
+        sport=dport,
         dport=synpacket[TCP].sport,
-        flags="SA",
-        seq=100,
-        ack=synpacket[TCP].seq + 1,
+        flags="SA",  # syn-ack flags
+        seq=100,  # random number since it's a new connection
+        ack=synpacket[TCP].seq + 1,  # the client's seq + 1
     )
 
     packet = ip_layer / tcp_layer / Raw(load=COOKIE)
@@ -57,7 +67,10 @@ send_syncak_with_cookie_client(syn)
 
 # step 3 - use proper filter to capture the client ACK
 def ack_filter(p):
-    return TCP in p and p[TCP].flags == "A"
+    """
+    Filter for a client ACK packet
+    """
+    return TCP in p and p[TCP].flags == "A" and p[TCP].dport == dport
 
 
 def capture_ack_client():
@@ -82,9 +95,9 @@ time.sleep(1)
 def tfo_syn_filter(p):
     """
     Filter for a tfo SYN packet
-    meaning it's a SYN packet with a cookie with lenght of 8 bytes
+    meaning its a SYN packet with a cookie
     """
-    return TCP in p and p[TCP].flags == "S"
+    return TCP in p and p[TCP].flags == "S" and p[TCP].dport == PORT and Raw in p
 
 
 def capture_tfo_syn():
@@ -105,29 +118,26 @@ tfo_syn = capture_tfo_syn()
 
 
 def send_tfo_response(syn_packet, request_type):
+    """
+    Send a TFO response to the client
+    """
+
+    # check if the cookie is in the packet and if it's the same as the one we sent
     if Raw in syn_packet and syn_packet[Raw].load.startswith(COOKIE):
         # if request_type == "Name":
-        #     response = b"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nName: Daniel Attali"
+        #     response = b"HTTP/1.1 200 OK\r\nContent-Type: text/plaintext\r\n\r\nName: Daniel Attali"
         # elif request_type == "ID":
         #     response = (
-        #         b"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nID: 328780879"
+        #         b"HTTP/1.1 200 OK\r\nContent-Type: text/plaintext\r\n\r\nID: 328780879"
         #     )
+
+        content = ""
         if request_type == "Name":
-            response = (
-                b"HTTP/1.1 200 OK\r\n"
-                b"Content-Type: text/plain\r\n"
-                b"Content-Length: 23\r\n"
-                b"Connection: close\r\n"
-                b"Name: Daniel Attali"
-            )
+            content = "Daniel Attali"
         elif request_type == "ID":
-            response = (
-                b"HTTP/1.1 200 OK\r\n"
-                b"Content-Type: text/plain\r\n"
-                b"Content-Length: 18\r\n"
-                b"Connection: close\r\n"
-                b"ID: 328780879"
-            )
+            content = "328780879"
+
+        response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length : {len(content)}\r\n\r\n{content}".encode()
 
         ip_layer = IP(dst=syn_packet[IP].src)
         tcp_layer = TCP(
@@ -147,8 +157,10 @@ def send_tfo_response(syn_packet, request_type):
         print("No cookie found, finishing running")
 
 
+# get the request from the packet
 request = tfo_syn[Raw].load.decode("utf-8")
 
+# send the response based on the request according to the exercise
 if "/Name" in request:
     send_tfo_response(tfo_syn, "Name")
 elif "/ID" in request:
